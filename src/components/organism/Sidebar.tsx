@@ -74,23 +74,6 @@ const SidebarComponent = () => {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarContent>
-        <h1
-          onClick={() => {
-            setTheme("light");
-          }}
-        >
-          LIGHT
-        </h1>
-        <h1
-          onClick={() => {
-            setTheme("dark");
-          }}
-        >
-          DARK
-        </h1>
-        <Text as="h1" styleVariant="T1">
-          hey
-        </Text>
         <SidebarFooter>
           <Button onClick={handleSignout}>Logout</Button>
         </SidebarFooter>
