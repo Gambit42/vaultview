@@ -3,6 +3,9 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { ThemeProvider } from "@/context/ThemeProvider";
+import TanstackProvider from "@/context/TanstackProvider";
+import { AuthProvider } from "@/context/AuthProvider";
+import { Toaster } from "@/components/ui/sonner";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -24,7 +27,14 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${poppins.variable} antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-          <SidebarProvider>{children}</SidebarProvider>
+          <SidebarProvider>
+            <TanstackProvider>
+              <AuthProvider>
+                {children}
+                <Toaster richColors />
+              </AuthProvider>
+            </TanstackProvider>
+          </SidebarProvider>
         </ThemeProvider>
       </body>
     </html>

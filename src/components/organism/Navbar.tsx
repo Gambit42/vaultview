@@ -5,6 +5,7 @@ import Searchbar from "../molecules/Searchbar";
 import Text from "@/components/atoms/Text";
 import { useTheme } from "next-themes";
 import { Moon, Sun } from "lucide-react";
+import CurrencySelection from "@/components/molecules/CurrencySelection";
 
 const Navbar = () => {
   const { setTheme, theme } = useTheme();
@@ -14,10 +15,11 @@ const Navbar = () => {
     <div className="h-[80px] bg-card-background w-full rounded-lg flex flex-row justify-between items-center px-4">
       <Searchbar />
       <div className="flex flex-row">
+        <CurrencySelection />
         <div>
           {isDark ? (
             <div
-              className="p-2"
+              className="p-2 cursor-pointer"
               onClick={() => {
                 setTheme("light");
               }}
@@ -26,7 +28,7 @@ const Navbar = () => {
             </div>
           ) : (
             <div
-              className="p-2"
+              className="p-2 cursor-pointer"
               onClick={() => {
                 setTheme("dark");
               }}

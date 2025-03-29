@@ -1,7 +1,8 @@
 import React from "react";
+import MarketPage from "@/components/page/MarketPage";
 
 const page = () => {
-  return <div></div>;
+  return <MarketPage />;
 };
 
 export default page;

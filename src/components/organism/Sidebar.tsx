@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Sidebar,
   SidebarContent,
@@ -14,21 +14,23 @@ import {
 } from "@/components/ui/sidebar";
 import { MENUS } from "@/constants";
 import Image from "next/image";
-import { Moon, MoonIcon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-import Text from "@/components/atoms/Text";
 import { usePathname } from "next/navigation";
-import DashboardIcon from "../icons/DashboardIcon";
-import MarketIcon from "../icons/MarketIcon";
 import { Button } from "@/components/ui/button";
 import MenuItem from "@/components/atoms/MenuItem";
 
 const SidebarComponent = () => {
   const handleSignout = () => {};
-  const { setTheme, theme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  const { theme } = useTheme();
   const pathname = usePathname();
 
-  const isDark = theme === "dark";
+  const isDark = mounted && theme === "dark";
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <div>
@@ -44,6 +46,7 @@ const SidebarComponent = () => {
                   isDark ? "/vaultview-light.svg" : "/vaultview-dark.svg"
                 }`}
                 style={{ objectFit: "contain" }}
+                suppressHydrationWarning
               />
             </div>
           </SidebarGroupLabel>
