@@ -1,14 +1,11 @@
 "use client";
 
 import axios from "axios";
-import useLocalStorage from "@/hooks/useLocalStorage";
 
 export const useRefreshToken = (
   setItem: (key: string, value: string) => void
 ) => {
   const refreshToken = async () => {
-    //@ts-ignore
-
     try {
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/auth/refresh-tokens`,
@@ -22,8 +19,6 @@ export const useRefreshToken = (
     } catch (error) {
       console.log(error);
     }
-
-    //@ts-ignore
   };
   return refreshToken;
 };

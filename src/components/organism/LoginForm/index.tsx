@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useContext, useRef } from "react";
+import React, { useState } from "react";
 import { LoginFormType, loginFormSchema } from "./schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -9,8 +9,6 @@ import { useRouter } from "next/navigation";
 import { Input } from "@/components/atoms/Input";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
-import { AuthContext } from "@/context/AuthProvider";
-import { useRefreshToken } from "@/hooks/useRefreshToken";
 import useLocalStorage from "@/hooks/useLocalStorage";
 
 const LoginForm = () => {
@@ -18,21 +16,12 @@ const LoginForm = () => {
   const LoginFormMethods = useForm<LoginFormType>({
     resolver: zodResolver(loginFormSchema),
   });
-  const { user, setUser } = useContext(AuthContext);
   const { setItem } = useLocalStorage();
 
   type FormData = z.infer<typeof loginFormSchema>;
 
   const router = useRouter();
-  const {
-    register,
-    handleSubmit,
-    watch,
-    setValue,
-    formState: { errors },
-  } = LoginFormMethods;
-
-  const refreshToken = useRefreshToken(setItem);
+  const { register, handleSubmit } = LoginFormMethods;
 
   const onFormSubmit = async (data: FormData) => {
     const { email, password } = data;

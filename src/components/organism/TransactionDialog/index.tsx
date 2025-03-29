@@ -17,7 +17,6 @@ import * as z from "zod";
 import { TransactionFormType, transactionFormSchema } from "./schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import currencyStore from "@/context/currencyStore";
-import { DEFAULT_CURRENCY } from "@/constants";
 import authClientInterceptor from "@/lib/authClientInterceptor";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
@@ -32,12 +31,7 @@ const TransactionDialog: React.FC<{
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { activeCrypto, setActiveCrypto } = activeCryptoStore();
 
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    formState: { errors },
-  } = useForm<TransactionFormType>({
+  const { register, handleSubmit, setValue } = useForm<TransactionFormType>({
     resolver: zodResolver(transactionFormSchema),
   });
   type FormData = z.infer<typeof transactionFormSchema>;
@@ -91,6 +85,8 @@ const TransactionDialog: React.FC<{
 
   useEffect(() => {
     handleSetDefaultCryptoValues();
+
+    /* eslint-disable react-hooks/exhaustive-deps */
   }, [activeCrypto]);
 
   return (

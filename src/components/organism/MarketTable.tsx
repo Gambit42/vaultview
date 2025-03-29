@@ -15,7 +15,8 @@ import currencyStore from "@/context/currencyStore";
 import activeCryptoStore from "@/context/activeCryptoStore";
 
 const MarketTable = () => {
-  const [currentPage, setCurrentPage] = useState(1);
+  const currentPage = 1;
+  // const [currentPage, setCurrentPage] = useState(1);
   const [coins, setCoins] = useState<any>([]);
   const { currency } = currencyStore();
   const { setActiveCrypto } = activeCryptoStore();
@@ -46,6 +47,8 @@ const MarketTable = () => {
   useEffect(() => {
     if (isLoading) return;
     refetch();
+
+    /* eslint-disable react-hooks/exhaustive-deps */
   }, [currentPage, currency]);
 
   const columns: ColumnDef<any>[] = [

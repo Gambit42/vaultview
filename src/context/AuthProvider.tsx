@@ -27,6 +27,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (userStore) {
       setUser(JSON.parse(userStore));
     }
+
+    /* eslint-disable react-hooks/exhaustive-deps */
   }, [pathname]);
 
   return (

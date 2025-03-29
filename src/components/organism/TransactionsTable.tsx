@@ -6,19 +6,17 @@ import {
   useReactTable,
   ColumnDef,
 } from "@tanstack/react-table";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import Image from "next/image";
 import PercentageChangeText from "@/components/molecules/PercentageChangeText";
 import CurrencySymbol from "@/components/atoms/CurrencySymbol";
 import currencyStore from "@/context/currencyStore";
 import activeCryptoStore from "@/context/activeCryptoStore";
-import authClientInterceptor from "@/lib/authClientInterceptor";
 import useGetUserTransactions from "@/hooks/useGetUserTransactions";
 import { handleConvertToCurrency } from "@/lib/numbers";
 
 const TransactionsTable: React.FC<{ usdtPrice: number }> = ({ usdtPrice }) => {
-  const [currentPage, setCurrentPage] = useState(1);
+  // const [currentPage, setCurrentPage] = useState(1);
+  const currentPage = 1;
   const [coins, setCoins] = useState<any>([]);
   const { setActiveCrypto } = activeCryptoStore();
   const { currency } = currencyStore();

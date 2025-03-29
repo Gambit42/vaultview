@@ -14,13 +14,7 @@ const RegisterForm = () => {
 
   type FormData = z.infer<typeof registerFormSchema>;
 
-  const {
-    register,
-    handleSubmit,
-    watch,
-    setValue,
-    formState: { errors },
-  } = RegisterFormMethods;
+  const { register, handleSubmit } = RegisterFormMethods;
 
   const onFormSubmit = async (data: FormData) => {
     console.log(data);

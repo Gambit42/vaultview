@@ -1,7 +1,6 @@
 import React from "react";
 import Image from "next/image";
 import Text from "@/components/atoms/Text";
-import { Button } from "@/components/ui/button";
 import CurrencySymbol from "@/components/atoms/CurrencySymbol";
 import { handleConvertToCurrency } from "@/lib/numbers";
 import currencyStore from "@/context/currencyStore";

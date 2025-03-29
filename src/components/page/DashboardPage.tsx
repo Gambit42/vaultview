@@ -1,15 +1,12 @@
 "use client";
 
-import React, { useContext } from "react";
+import React from "react";
 import Card from "../molecules/Card";
-import { AuthContext } from "@/context/AuthProvider";
 import TransactionsTable from "@/components/organism/TransactionsTable";
 import useGetPortfolioBalance from "@/hooks/useGetPortoflioBalance";
 import useGetUSDTPrice from "@/hooks/useGetUSDTPrice";
 
 const DashboardPage = () => {
-  const { user, setUser } = useContext(AuthContext);
-
   const { data } = useGetPortfolioBalance();
   const { data: usdtPrice } = useGetUSDTPrice();
 

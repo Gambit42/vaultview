@@ -3,7 +3,7 @@ import { Payload } from "@/types/payload";
 import { NextResponse, NextRequest } from "next/server";
 
 const userRoutes = ["/dashboard", "/market"];
-const publicRoutes = ["/login", "/signup", "/"];
+// const publicRoutes = ["/login", "/signup", "/"];
 
 // This function can be marked `async` if using `await` inside
 export function middleware(request: NextRequest) {
@@ -16,7 +16,7 @@ export function middleware(request: NextRequest) {
   console.log("accessToken", accessToken);
 
   const isUserRoute = userRoutes.includes(path);
-  const isPublicRoute = publicRoutes.includes(path);
+  // const isPublicRoute = publicRoutes.includes(path);
 
   //if user route and no session redirect to login
   if (isUserRoute && !isLoggedIn) {

@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import currencyStore from "@/context/currencyStore";
 import authClientInterceptor from "@/lib/authClientInterceptor";
