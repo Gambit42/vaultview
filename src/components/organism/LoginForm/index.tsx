@@ -38,6 +38,7 @@ const LoginForm = () => {
         }
       );
 
+      console.log("result", result);
       setItem("user", JSON.stringify({ email: result.data.email }));
       router.push("/dashboard");
 
