@@ -10,20 +10,21 @@ const useGetUserTransactions = (currentPage: number) => {
     queryFn: async () => {
       try {
         const result = await authClientInterceptor.get(
-          `${
-            process.env.NEXT_PUBLIC_BACKEND_API_URL
-          }/user/user-transactions?page=${currentPage}&limit=${10}`,
+          `/api/user/transactions/user-transactions?page=${currentPage}&limit=${10}`,
           {
-            withCredentials: true,
             timeout: 5000, // Increase timeout to 5 seconds
           }
         );
 
-        console.log("result", result);
+        if (result.data.status === 401) {
+          return console.log("Interceptor should accept this");
+        }
 
-        return result.data;
+        console.log("result po", result);
+
+        return result.data.data;
       } catch (error) {
-        console.log("error", error);
+        console.log("error 123", error);
         return [];
       }
     },

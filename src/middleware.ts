@@ -18,7 +18,7 @@ export function middleware(request: NextRequest) {
   const isUserRoute = userRoutes.includes(path);
   // const isPublicRoute = publicRoutes.includes(path);
 
-  //if user route and no session redirect to login
+  // if user route and no session redirect to login
   if (isUserRoute && !isLoggedIn) {
     return NextResponse.redirect(new URL("/login", request.url));
   }

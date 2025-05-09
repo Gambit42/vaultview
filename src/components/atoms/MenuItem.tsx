@@ -34,9 +34,6 @@ const MenuItem: React.FC<{ link: string; name: string; isActive: boolean }> = ({
           as="h1"
           styleVariant="T2"
           className="flex flex-row items-center font-medium"
-          onClick={() => {
-            console.log(IconComponent);
-          }}
         >
           {name}
         </Text>

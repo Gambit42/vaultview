@@ -33,7 +33,7 @@ const SidebarComponent = () => {
   }, []);
 
   return (
-    <div>
+    <div className="hidden lg:block">
       <Sidebar>
         <SidebarHeader />
         <SidebarContent>

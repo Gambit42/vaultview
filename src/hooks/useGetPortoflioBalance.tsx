@@ -10,16 +10,15 @@ const useGetPortfolioBalance = () => {
     queryFn: async () => {
       try {
         const result = await authClientInterceptor.get(
-          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/user/user-portfolio`,
+          `/api/user/user-portfolio`,
           {
-            withCredentials: true,
             timeout: 5000, // Increase timeout to 5 seconds
           }
         );
 
         console.log("resultE", result);
 
-        return result.data;
+        return result.data.data;
       } catch (error) {
         return null;
         console.log("error", error);

@@ -94,3 +94,17 @@ export const FIATS_ARRAY = [
   { label: "bdt", value: "bdt" },
   { label: "sar", value: "sar" },
 ];
+
+export const REFRESH_TOKEN_MAX_AGE = 7 * 24 * 60 * 60 * 1000;
+export const ACCESS_TOKEN_MAX_AGE = 15 * 60 * 1000;
+export const TABS = ["transactions", "overview"];
+export const OVERVIEW_OPTIONS = [
+  {
+    label: "Weekly",
+    value: "7",
+  },
+  {
+    label: "Monthly",
+    value: "30",
+  },
+];

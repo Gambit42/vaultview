@@ -28,7 +28,7 @@ const LoginForm = () => {
 
     try {
       const result = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/login`,
+        `/api/auth`,
         {
           email,
           password,
@@ -37,9 +37,7 @@ const LoginForm = () => {
           withCredentials: true,
         }
       );
-
-      console.log("result", result);
-      setItem("user", JSON.stringify({ email: result.data.email }));
+      setItem("user", JSON.stringify({ email: result.data.data.email }));
       router.push("/dashboard");
 
       // return router.push("/");

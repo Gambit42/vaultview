@@ -8,7 +8,7 @@ const PercentageChangeText: React.FC<{
   priceChange: number;
 }> = ({ isUp, priceChange }) => {
   return (
-    <div className="flex flex-row items-center justify-end gap-1">
+    <div className="flex flex-row items-center justify-end gap-1 min-w-[100px]">
       <Image
         width={10}
         height={10}

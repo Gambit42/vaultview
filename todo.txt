@@ -1,0 +1,4 @@
+Problem. My frontend is at vercel.app and my backend is at railway.app. In order for my cookies set on railway.app to be accessible to the vercel.app, I will need both of them to be on the same domain or have custom domain and subdomain.
+
+
+Now, i can still use headers in order to verify it as a workaround

@@ -11,17 +11,35 @@ import PercentageChangeText from "@/components/molecules/PercentageChangeText";
 import CurrencySymbol from "@/components/atoms/CurrencySymbol";
 import currencyStore from "@/context/currencyStore";
 import activeCryptoStore from "@/context/activeCryptoStore";
-import useGetUserTransactions from "@/hooks/useGetUserTransactions";
 import { handleConvertToCurrency } from "@/lib/numbers";
+import authClientInterceptor from "@/lib/authClientInterceptor";
+import useGetUserTransactions from "@/hooks/useGetUserTransactions";
 
-const TransactionsTable: React.FC<{ usdtPrice: number }> = ({ usdtPrice }) => {
-  // const [currentPage, setCurrentPage] = useState(1);
+const TransactionsTable: React.FC<{
+  usdtPrice: number;
+  setCurrentTokenId: (value: string) => void;
+}> = ({ usdtPrice, setCurrentTokenId }) => {
   const currentPage = 1;
   const [coins, setCoins] = useState<any>([]);
   const { setActiveCrypto } = activeCryptoStore();
   const { currency } = currencyStore();
 
   const { data: marketData } = useGetUserTransactions(currentPage);
+
+  const handleDeleteTransaction = async (tokenId: string) => {
+    try {
+      const result = await authClientInterceptor.post(
+        `/api/user/transactions/delete/by-token`,
+        {
+          tokenId: tokenId,
+        }
+      );
+
+      console.log("result", result);
+    } catch (error) {
+      console.log("err", error);
+    }
+  };
 
   const columns: ColumnDef<any>[] = [
     {
@@ -30,7 +48,7 @@ const TransactionsTable: React.FC<{ usdtPrice: number }> = ({ usdtPrice }) => {
       // meta: { size: "200px" },
       cell: ({ row }) => (
         <div
-          className="flex flex-row items-center gap-2 "
+          className="flex flex-row items-center gap-2 min-w-[200px]"
           onClick={() => {
             console.log(row.original);
           }}
@@ -79,7 +97,7 @@ const TransactionsTable: React.FC<{ usdtPrice: number }> = ({ usdtPrice }) => {
           usdtPrice
         );
         return (
-          <div className="flex flex-row items-end justify-end">
+          <div className="flex flex-row items-end justify-end min-w-[150px]">
             <CurrencySymbol />
             <Text className="uppercase" as="p" styleVariant="T2">
               {`${convertedValue.toLocaleString()}`}
@@ -90,11 +108,11 @@ const TransactionsTable: React.FC<{ usdtPrice: number }> = ({ usdtPrice }) => {
     },
     {
       accessorKey: "holdings",
-      header: "Holdings",
+      header: "Amount",
       meta: { size: "150px" },
       cell: ({ row }) => {
         return (
-          <div className="flex flex-col items-end justify-end">
+          <div className="flex flex-col items-end justify-end min-w-[150px]">
             <Text className="uppercase" as="p" styleVariant="T2">
               {` ${Number(row.original.totalAmount).toLocaleString()} ${
                 row.original.symbol
@@ -110,7 +128,17 @@ const TransactionsTable: React.FC<{ usdtPrice: number }> = ({ usdtPrice }) => {
       header: "Action",
       meta: { size: "150px" },
       cell: ({ row }) => (
-        <div className="flex items-center justify-end space-x-2">
+        <div className="flex items-center justify-end space-x-2 min-w-[150px]">
+          <Image
+            width={24}
+            height={24}
+            alt="add-transaction"
+            src="/icons/view.svg"
+            className="cursor-pointer"
+            onClick={() => {
+              setCurrentTokenId(row.original._id);
+            }}
+          />
           <Image
             width={24}
             height={24}
@@ -128,6 +156,7 @@ const TransactionsTable: React.FC<{ usdtPrice: number }> = ({ usdtPrice }) => {
               });
             }}
           />
+
           <Image
             width={24}
             height={24}
@@ -136,13 +165,14 @@ const TransactionsTable: React.FC<{ usdtPrice: number }> = ({ usdtPrice }) => {
             className="cursor-pointer"
             onClick={() => {
               console.log(row.original);
-              setActiveCrypto({
-                tokenId: row.original.id,
-                name: row.original.name,
-                image: row.original.image,
-                symbol: row.original.symbol,
-                currentPrice: row.original.current_price,
-              });
+              handleDeleteTransaction(row.original._id);
+              // setActiveCrypto({
+              //   tokenId: row.original.id,
+              //   name: row.original.name,
+              //   image: row.original.image,
+              //   symbol: row.original.symbol,
+              //   currentPrice: row.original.current_price,
+              // });
             }}
           />
         </div>
@@ -168,8 +198,8 @@ const TransactionsTable: React.FC<{ usdtPrice: number }> = ({ usdtPrice }) => {
         Your Transactions
       </Text>
 
-      <div className="relative w-full overflow-auto my-4">
-        <table className="w-full">
+      <div className="relative w-full overflow-x-auto my-4">
+        <table className="w-full min-w-full">
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>

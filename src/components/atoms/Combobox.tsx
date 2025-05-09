@@ -17,13 +17,14 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { FIATS_ARRAY } from "@/constants";
-import currencyStore from "@/context/currencyStore";
 
-const CurrencySelection = () => {
+const Combobox: React.FC<{
+  options: { label: string; value: string }[];
+  value: any;
+  setValue: any;
+  width?: string;
+}> = ({ options, value, setValue, width }) => {
   const [open, setOpen] = React.useState(false);
-  const { currency, setCurrency } = currencyStore();
-  //   const [value, setValue] = React.useState("");
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -32,28 +33,29 @@ const CurrencySelection = () => {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between"
+          className={`w-full justify-between ${width}`}
         >
-          {currency
-            ? FIATS_ARRAY.find((framework) => framework.value === currency)
-                ?.label
+          {value
+            ? options
+                .find((framework) => framework.value === value)
+                ?.label.toUpperCase()
             : "Select currency..."}
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
+      <PopoverContent className={`w-full p-0 ${width}`}>
         <Command>
           <CommandInput placeholder="Search currency..." className="h-9" />
           <CommandList>
             <CommandEmpty>No framework found.</CommandEmpty>
             <CommandGroup>
-              {FIATS_ARRAY.map((framework) => (
+              {options.map((framework) => (
                 <CommandItem
                   className="cursor-pointer"
                   key={framework.value}
                   value={framework.value}
                   onSelect={(currentValue: any | string) => {
-                    setCurrency(currentValue === currency ? "" : currentValue);
+                    setValue(currentValue === value ? "" : currentValue);
                     setOpen(false);
                   }}
                 >
@@ -61,7 +63,7 @@ const CurrencySelection = () => {
                   <Check
                     className={cn(
                       "ml-auto",
-                      currency === framework.value ? "opacity-100" : "opacity-0"
+                      value === framework.value ? "opacity-100" : "opacity-0"
                     )}
                   />
                 </CommandItem>
@@ -74,4 +76,4 @@ const CurrencySelection = () => {
   );
 };
 
-export default CurrencySelection;
+export default Combobox;

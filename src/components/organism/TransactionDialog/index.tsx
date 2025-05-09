@@ -33,6 +33,9 @@ const TransactionDialog: React.FC<{
 
   const { register, handleSubmit, setValue } = useForm<TransactionFormType>({
     resolver: zodResolver(transactionFormSchema),
+    defaultValues: {
+      amount: 0, // or "" if you prefer
+    },
   });
   type FormData = z.infer<typeof transactionFormSchema>;
 
@@ -47,7 +50,7 @@ const TransactionDialog: React.FC<{
 
     try {
       const result = await authClientInterceptor.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/user/create-transaction`,
+        `/api/user/transactions/create`,
         {
           tokenId: data.tokenId,
           symbol: data.symbol,
@@ -57,9 +60,6 @@ const TransactionDialog: React.FC<{
           originalPurchasePriceCurrency: currency,
           originalPurchasePrice: data.purchasePrice,
           purchasePriceInUsdt: purchasePriceInUsdt,
-        },
-        {
-          withCredentials: true,
         }
       );
       console.log("result", result);
@@ -86,7 +86,7 @@ const TransactionDialog: React.FC<{
   useEffect(() => {
     handleSetDefaultCryptoValues();
 
-    /* eslint-disable react-hooks/exhaustive-deps */
+     
   }, [activeCrypto]);
 
   return (
@@ -101,6 +101,7 @@ const TransactionDialog: React.FC<{
           symbol: "",
           currentPrice: 0,
         });
+        setValue("amount", 0);
       }}
     >
       <DialogContent className="sm:max-w-[425px] font-poppins">

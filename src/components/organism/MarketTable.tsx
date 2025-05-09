@@ -6,49 +6,41 @@ import {
   useReactTable,
   ColumnDef,
 } from "@tanstack/react-table";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import Image from "next/image";
 import PercentageChangeText from "@/components/molecules/PercentageChangeText";
 import CurrencySymbol from "@/components/atoms/CurrencySymbol";
 import currencyStore from "@/context/currencyStore";
 import activeCryptoStore from "@/context/activeCryptoStore";
+import { Skeleton } from "@/components/ui/skeleton";
 
-const MarketTable = () => {
-  const currentPage = 1;
-  // const [currentPage, setCurrentPage] = useState(1);
+const MarketTable: React.FC<{
+  marketData: any;
+  isLoading: boolean;
+  refetch: any;
+  currentPage: number;
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
+  isPaginated: boolean;
+}> = ({
+  marketData,
+  isLoading,
+  refetch,
+  currentPage,
+  setCurrentPage,
+  isPaginated,
+}) => {
   const [coins, setCoins] = useState<any>([]);
   const { currency } = currencyStore();
   const { setActiveCrypto } = activeCryptoStore();
-
-  const {
-    data: marketData,
-    isLoading,
-    refetch,
-  } = useQuery({
-    queryKey: ["get-market"],
-    queryFn: async () => {
-      try {
-        const result = await axios.get(
-          `http://localhost:3001/crypto/market?currency=${currency}&page=${currentPage}`
-        );
-
-        console.log("result", result);
-
-        return result.data;
-      } catch (error) {
-        console.log("error", error);
-      }
-    },
-    refetchOnWindowFocus: false, // default: true
-    staleTime: 1000 * 60 * 10, // Data is considered fresh for 5 minutes
-  });
+  const DEFAULT_ACTIVE_PAGE_NUMBERS = [1, 2, 3];
+  const [activePageNumbers, setActivePageNumbers] = useState(
+    DEFAULT_ACTIVE_PAGE_NUMBERS
+  );
 
   useEffect(() => {
     if (isLoading) return;
     refetch();
 
-    /* eslint-disable react-hooks/exhaustive-deps */
+     
   }, [currentPage, currency]);
 
   const columns: ColumnDef<any>[] = [
@@ -66,12 +58,7 @@ const MarketTable = () => {
       accessorKey: "name",
       header: "Name",
       cell: ({ row }) => (
-        <div
-          className="flex flex-row items-center gap-2 "
-          onClick={() => {
-            console.log(row.original);
-          }}
-        >
+        <div className="flex flex-row items-center gap-2 min-w-[150px] ">
           <Image
             width={24}
             height={24}
@@ -79,7 +66,11 @@ const MarketTable = () => {
             src={row.original.image}
             alt="coin-image"
           />
-          <Text className="uppercase font-medium" as="p" styleVariant="T3">
+          <Text
+            className="uppercase font-medium truncate overflow-hidden whitespace-nowrap w-[100px]"
+            as="p"
+            styleVariant="T3"
+          >
             {row.original.name}
           </Text>
           <Text className="uppercase" as="p" styleVariant="T3">
@@ -93,7 +84,7 @@ const MarketTable = () => {
       header: "Current Price",
       meta: { size: "150px" },
       cell: ({ row }) => (
-        <Text className="uppercase" as="p" styleVariant="T2">
+        <Text className="uppercase min-w-[150px]" as="p" styleVariant="T2">
           <CurrencySymbol />
           {` ${Number(row.getValue("current_price")).toLocaleString()}`}
         </Text>
@@ -140,7 +131,7 @@ const MarketTable = () => {
       header: "Market Cap",
       meta: { size: "200px" },
       cell: ({ row }) => (
-        <Text className="uppercase" as="p" styleVariant="T2">
+        <Text className="uppercase min-w-[200px]" as="p" styleVariant="T2">
           <CurrencySymbol />{" "}
           {Number(row.getValue("market_cap")).toLocaleString()}
         </Text>
@@ -186,13 +177,57 @@ const MarketTable = () => {
     }
   }, [marketData]);
 
+  useEffect(() => {
+    //If new page adjust
+
+    if (currentPage <= 3) {
+      return setActivePageNumbers(DEFAULT_ACTIVE_PAGE_NUMBERS);
+    }
+
+    if (currentPage === activePageNumbers[2] + 1) {
+      return setActivePageNumbers([
+        currentPage,
+        currentPage + 1,
+        currentPage + 2,
+      ]);
+    }
+
+    if (currentPage < activePageNumbers[0]) {
+      return setActivePageNumbers([
+        currentPage - 2,
+        currentPage - 1,
+        currentPage,
+      ]);
+    }
+  }, [currentPage]);
+
+  const columnWidths = [
+    "w-[30px]",
+    "w-full",
+    "w-[150px]",
+    "w-[150px]",
+    "w-[150px]",
+    "w-[200px]",
+    "w-[200px]",
+    "w-[100px]",
+  ];
+
+  const SkeletonRow = () => (
+    <tr>
+      {columnWidths.map((width, i) => (
+        <td key={i} className="px-2">
+          <Skeleton className={`${width} h-[50px] rounded-lg`} />
+        </td>
+      ))}
+    </tr>
+  );
   return (
     <div className="bg-card-background w-full p-4">
       <Text as="h1" styleVariant="T1">
         Top Coins
       </Text>
       <div className="relative w-full overflow-auto my-4">
-        <table className="w-full">
+        <table className="w-full border-separate border-spacing-y-2">
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
@@ -226,38 +261,89 @@ const MarketTable = () => {
             ))}
           </thead>
 
-          <tbody>
-            {table.getRowModel().rows.map((row, index) => {
-              const isEven = index % 2 === 0;
-              return (
-                <tr
-                  key={row.id}
-                  className={`${
-                    !isEven && "bg-[#F1F3F4] dark:bg-[#262C36]"
-                  } border-b`}
-                >
-                  {row.getVisibleCells().map((cell, index) => {
-                    const isFirstTwo = [0, 1].includes(index);
-                    return (
-                      <td
-                        key={cell.id}
-                        className={`h-[50px] ${
-                          isFirstTwo ? "text-left" : "text-right"
-                        } px-2`}
-                      >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
-          </tbody>
+          {isLoading ? (
+            <tbody className="">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <SkeletonRow key={i} />
+              ))}
+            </tbody>
+          ) : (
+            <tbody>
+              {table.getRowModel().rows.map((row, index) => {
+                const isEven = index % 2 === 0;
+                return (
+                  <tr
+                    key={row.id}
+                    className={`${
+                      !isEven && "bg-[#F1F3F4] dark:bg-[#262C36]"
+                    } border-b`}
+                  >
+                    {row.getVisibleCells().map((cell, index) => {
+                      const isFirstTwo = [0, 1].includes(index);
+                      return (
+                        <td
+                          key={cell.id}
+                          className={`h-[50px] ${
+                            isFirstTwo ? "text-left" : "text-right"
+                          } px-2`}
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                );
+              })}
+            </tbody>
+          )}
         </table>
       </div>
+      {/*Pagination*/}
+      {isPaginated && (
+        <div className="pt-4 font-poppins flex flex-row items-center justify-center gap-2">
+          <div
+            className="border bg-card flex items-center justify-center w-[35px] h-[35px] text-[18px] rounded-lg cursor-pointer bg-gray-50"
+            onClick={() => {
+              //if first page return
+              if (currentPage === 1) return;
+              setCurrentPage((prev) => prev - 1);
+            }}
+          >
+            {`<`}
+          </div>
+          <div className="flex flex-row gap-1 items-center justify-center">
+            {activePageNumbers.map((item) => {
+              const currentNumber = item;
+              const isActive = currentPage === currentNumber;
+              return (
+                <div
+                  className={`cursor-pointer flex items-center justify-center w-[35px] h-[35px] rounded-lg border ${
+                    isActive ? "bg-primary text-white" : "bg-gray-50"
+                  }`}
+                  key={item}
+                  onClick={() => {
+                    setCurrentPage(currentNumber);
+                  }}
+                >
+                  {currentNumber}
+                </div>
+              );
+            })}
+            <div>...</div>
+          </div>
+          <div
+            className="border  flex items-center justify-center w-[35px] h-[35px] text-[18px] rounded-lg cursor-pointer bg-gray-50"
+            onClick={() => {
+              setCurrentPage((prev) => prev + 1);
+            }}
+          >
+            {`>`}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

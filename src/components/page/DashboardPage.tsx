@@ -1,29 +1,46 @@
 "use client";
 
-import React from "react";
-import Card from "../molecules/Card";
+import React, { useState } from "react";
 import TransactionsTable from "@/components/organism/TransactionsTable";
 import useGetPortfolioBalance from "@/hooks/useGetPortoflioBalance";
 import useGetUSDTPrice from "@/hooks/useGetUSDTPrice";
+import LoseOrGainChart from "@/components/organism/LoseOrGainChart";
+import useGetPortfolioHistory from "@/hooks/useGetPortfolioHistory";
+import TransactionsByTokenTable from "../organism/TransactionsByTokenTable";
+import { OVERVIEW_OPTIONS } from "@/constants";
 
 const DashboardPage = () => {
   const { data } = useGetPortfolioBalance();
+  const [overviewValue, setOverviewValue] = useState(OVERVIEW_OPTIONS[0].value);
+
+  const { data: dataHistory } = useGetPortfolioHistory(overviewValue);
   const { data: usdtPrice } = useGetUSDTPrice();
+
+  const [currentTokenId, setCurrentTokenId] = useState("");
 
   return (
     <div className="flex flex-col space-y-4">
-      <div className="flex flex-row flex-wrap gap-4">
-        <Card
-          title="Portfolio Balance"
-          value={data?.totalValue || 0}
-          percentageChange={data?.gainOrLossPercentage || 0}
-          color="#FFC565"
-          image="/icons/wallet-icon.svg"
+      <LoseOrGainChart
+        dataHistory={dataHistory}
+        total={data?.totalValue || 0}
+        usdtPrice={usdtPrice}
+        percentageChange={data?.gainOrLossPercentage || 0}
+        gainOrLoss={data?.gainOrLoss}
+        overviewValue={overviewValue}
+        setOverviewValue={setOverviewValue}
+      />
+      {!currentTokenId ? (
+        <TransactionsTable
           usdtPrice={usdtPrice}
-          gainOrLoss={data?.gainOrLoss}
+          setCurrentTokenId={setCurrentTokenId}
         />
-      </div>
-      <TransactionsTable usdtPrice={usdtPrice} />
+      ) : (
+        <TransactionsByTokenTable
+          usdtPrice={usdtPrice}
+          currentTokenId={currentTokenId}
+          setCurrentTokenId={setCurrentTokenId}
+        />
+      )}
     </div>
   );
 };

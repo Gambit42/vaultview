@@ -7,13 +7,7 @@ export const useRefreshToken = (
 ) => {
   const refreshToken = async () => {
     try {
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/refresh-tokens`,
-        null,
-        {
-          withCredentials: true,
-        }
-      );
+      const res = await axios.post(`/api/auth/refresh-tokens`);
       console.log(res.data);
       setItem("accessToken", res.data.accessToken);
     } catch (error) {

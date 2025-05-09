@@ -22,13 +22,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log("hahaha");
     const userStore = getItem("user");
 
     if (userStore) {
       setUser(JSON.parse(userStore));
     }
 
-    /* eslint-disable react-hooks/exhaustive-deps */
+     
   }, [pathname]);
 
   return (

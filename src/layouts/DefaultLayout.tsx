@@ -8,7 +8,7 @@ const DefaultLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
       <Sidebar />
       <div className="w-full lg:px-4">
         <Navbar />
-        {children}
+        <div className="mt-[60px]">{children}</div>
       </div>
     </>
   );
