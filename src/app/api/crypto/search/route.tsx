@@ -12,7 +12,7 @@ export async function GET(request: Request) {
     );
 
     if (result.data.coins.length <= 0) {
-      return [];
+      return Response.json({ status: 404, data: [] });
     }
 
     const coinIdsArray = result.data.coins
