@@ -62,12 +62,10 @@ const MarketPage = () => {
     queryFn: async () => {
       try {
         const result = await axios.get(
-          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/crypto/market?currency=${currency}&page=${currentPage}`
+          `/api/crypto/market?x_cg_demo_api_key=${process.env.COIN_GECKO_API_KEY}&currency=${currency}&page=${currentPage}`
         );
 
-        console.log("result", result);
-
-        return result.data;
+        return result.data.data;
       } catch (error) {
         console.log("error", error);
       }
