@@ -20,15 +20,17 @@ const DashboardPage = () => {
 
   return (
     <div className="flex flex-col space-y-4">
-      <LoseOrGainChart
-        dataHistory={dataHistory}
-        total={data?.totalValue || 0}
-        usdtPrice={usdtPrice}
-        percentageChange={data?.gainOrLossPercentage || 0}
-        gainOrLoss={data?.gainOrLoss}
-        overviewValue={overviewValue}
-        setOverviewValue={setOverviewValue}
-      />
+      {dataHistory && (
+        <LoseOrGainChart
+          dataHistory={dataHistory}
+          total={data?.totalValue || 0}
+          usdtPrice={usdtPrice}
+          percentageChange={data?.gainOrLossPercentage || 0}
+          gainOrLoss={data?.gainOrLoss}
+          overviewValue={overviewValue}
+          setOverviewValue={setOverviewValue}
+        />
+      )}
       {!currentTokenId ? (
         <TransactionsTable
           usdtPrice={usdtPrice}

@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import { Payload } from "@/types/payload";
 import { NextResponse, NextRequest } from "next/server";
 
-const userRoutes = ["/dashboard", "/market"];
+const userRoutes = ["/", "/market"];
 // const publicRoutes = ["/login", "/signup", "/"];
 
 // This function can be marked `async` if using `await` inside

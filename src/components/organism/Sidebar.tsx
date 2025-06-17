@@ -18,9 +18,9 @@ import { useTheme } from "next-themes";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import MenuItem from "@/components/atoms/MenuItem";
+import useSignout from "@/hooks/useSignout";
 
 const SidebarComponent = () => {
-  const handleSignout = () => {};
   const [mounted, setMounted] = useState(false);
 
   const { theme } = useTheme();
@@ -31,6 +31,7 @@ const SidebarComponent = () => {
   useEffect(() => {
     setMounted(true);
   }, []);
+  const signout = useSignout();
 
   return (
     <div className="hidden lg:block">
@@ -78,7 +79,14 @@ const SidebarComponent = () => {
           </SidebarGroupContent>
         </SidebarContent>
         <SidebarFooter>
-          <Button onClick={handleSignout}>Logout</Button>
+          <Button
+            onClick={() => {
+              console.log("maoo");
+              signout.mutate();
+            }}
+          >
+            Logout
+          </Button>
         </SidebarFooter>
       </Sidebar>
     </div>

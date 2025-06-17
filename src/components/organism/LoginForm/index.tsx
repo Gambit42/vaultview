@@ -10,6 +10,7 @@ import { Input } from "@/components/atoms/Input";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import useLocalStorage from "@/hooks/useLocalStorage";
+import Link from "next/link";
 
 const LoginForm = () => {
   const [customError, setCustomError] = useState("");
@@ -38,7 +39,7 @@ const LoginForm = () => {
         }
       );
       setItem("user", JSON.stringify({ email: result.data.data.email }));
-      router.push("/dashboard");
+      router.push("/");
 
       // return router.push("/");
     } catch (error) {
@@ -78,6 +79,13 @@ const LoginForm = () => {
           Submit
         </Button>
       </form>
+
+      <h1 className="text-center py-4 font-poppins text-[14px]">
+        No Account yet?{" "}
+        <Link href="/register" className="text-blue-500">
+          Sign Up here
+        </Link>
+      </h1>
     </div>
   );
 };

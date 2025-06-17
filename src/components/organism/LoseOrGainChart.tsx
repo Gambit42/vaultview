@@ -82,8 +82,7 @@ const LoseOrGainChart: React.FC<{
   };
 
   useEffect(() => {
-    console.log("data", dataHistory);
-    if (!dataHistory) return;
+    if (!dataHistory.length) return;
     formatDataHistory();
   }, [dataHistory]);
 

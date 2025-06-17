@@ -1,21 +1,19 @@
 import { useMutation } from "@tanstack/react-query";
-import authClientInterceptor from "@/lib/authClientInterceptor";
+import axios from "axios";
 import { AuthContext } from "@/context/AuthProvider";
 import { useContext } from "react";
+import { useRouter } from "next/navigation";
 
 const useSignout = () => {
   const { setUser } = useContext(AuthContext);
+  const router = useRouter();
   return useMutation({
     mutationKey: ["signout"],
     mutationFn: async () => {
       try {
-        const response = await authClientInterceptor.post(
-          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/signout`,
-          {},
-          { withCredentials: true }
-        );
+        const res = await axios.post(`/api/auth/signout`);
 
-        return response.data; // Extracting the data directly from the response
+        return res.data; // Extracting the data directly from the response
       } catch (error) {
         console.error("Unable to logout at this time", error);
         throw error;
@@ -24,6 +22,7 @@ const useSignout = () => {
     onSuccess: () => {
       setUser({ email: "", image: "" });
       localStorage.removeItem("user");
+      router.push("/login");
     },
   });
 };
